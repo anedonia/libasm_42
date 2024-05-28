@@ -1,32 +1,54 @@
-# Makefile for a basic assembly project
+# Name of the library
+NAME = libasm.a
 
-# Define the assembler and linker
-ASM = nasm
-LD = ld
+# Compiler and assembler
+CC = gcc
+NASM = nasm
 
-# Define the assembler and linker flags
-ASM_FLAGS = -f elf64
-LD_FLAGS = -m elf_x86_64
+# Compilation flags
+CFLAGS = -Wall -Wextra -Werror
+NASMFLAGS = -f elf64
 
-# Define the source and target files
-SRC = test.asm
-OBJ = test.o
-TARGET = main
+# Source files
+ASM_SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
+C_SRCS = main.c
 
-# Default target to build the executable
-all: $(TARGET)
+# Object files
+ASM_OBJS = $(ASM_SRCS:.s=.o)
+C_OBJS = $(C_SRCS:.c=.o)
 
-# Rule to assemble the source file
-$(OBJ): $(SRC)
-	$(ASM) $(ASM_FLAGS) -o $(OBJ) $(SRC)
+# Rule to build the library
+$(NAME): $(ASM_OBJS)
+	ar rcs $(NAME) $(ASM_OBJS)
 
-# Rule to link the object file and create the executable
-$(TARGET): $(OBJ)
-	$(LD) $(LD_FLAGS) -o $(TARGET) $(OBJ)
+# Rule to assemble .s files to .o files
+%.o: %.s
+	$(NASM) $(NASMFLAGS) $< -o $@
 
-# Rule to clean the build artifacts
+# Rule to compile C files to .o files
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Rule to build the executable using the library
+my_program: $(C_OBJS) $(NAME)
+	$(CC) $(CFLAGS) $(C_OBJS) -L. -lasm -o my_program
+
+# Rule to clean object files
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f $(ASM_OBJS) $(C_OBJS)
 
-# Phony targets
-.PHONY: all clean
+# Rule to clean everything
+fclean: clean
+	rm -f $(NAME) my_program
+
+# Rule to rebuild everything
+re: fclean all
+
+# Rule to build everything
+all: $(NAME) my_program
+
+# Rule to add bonuses
+bonus:
+	@echo "Add bonus compilation rules here if necessary"
+
+.PHONY: all clean fclean re bonus
