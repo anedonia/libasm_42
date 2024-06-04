@@ -10,19 +10,19 @@ CFLAGS = -Wall -Wextra -Werror
 NASMFLAGS = -f elf64
 
 # Source files
-ASM_SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
+ASM_SRCS = ft_strlen.asm ft_strcpy.asm ft_strcmp.asm ft_write.asm ft_read.asm ft_strdup.asm
 C_SRCS = main.c
 
 # Object files
-ASM_OBJS = $(ASM_SRCS:.s=.o)
+ASM_OBJS = $(ASM_SRCS:.asm=.o)
 C_OBJS = $(C_SRCS:.c=.o)
 
 # Rule to build the library
 $(NAME): $(ASM_OBJS)
 	ar rcs $(NAME) $(ASM_OBJS)
 
-# Rule to assemble .s files to .o files
-%.o: %.s
+# Rule to assemble .asm files to .o files
+%.o: %.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 # Rule to compile C files to .o files
