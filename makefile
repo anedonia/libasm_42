@@ -1,54 +1,40 @@
-# Name of the library
-NAME = libasm.a
+NAME = libasm
 
-# Compiler and assembler
-CC = gcc
+NAME_LIB = libasm.a
+
+SRCS = 	ft_write.s \
+		ft_read.s \
+		ft_strcmp.s \
+		ft_strcpy.s \
+		ft_strdup.s \
+		ft_strlen.s \
+
+CC = gcc 
+
+CFLAGS = -Wall -Wextra -Werror 
+
 NASM = nasm
 
-# Compilation flags
-CFLAGS = -Wall -Wextra -Werror
-NASMFLAGS = -f elf64
+NASMFLAGS = -f elf64 
 
-# Source files
-ASM_SRCS = ft_strlen.asm ft_strcpy.asm ft_strcmp.asm ft_write.asm ft_read.asm ft_strdup.asm
-C_SRCS = main.c
+OBJ = $(SRCS:.s=.o)
 
-# Object files
-ASM_OBJS = $(ASM_SRCS:.asm=.o)
-C_OBJS = $(C_SRCS:.c=.o)
-
-# Rule to build the library
-$(NAME): $(ASM_OBJS)
-	ar rcs $(NAME) $(ASM_OBJS)
-
-# Rule to assemble .asm files to .o files
-%.o: %.asm
+%.o : %.s
 	$(NASM) $(NASMFLAGS) $< -o $@
 
-# Rule to compile C files to .o files
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+all : $(NAME)
 
-# Rule to build the executable using the library
-my_program: $(C_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(C_OBJS) -L. -lasm -o my_program
+$(NAME) : $(OBJ)
+	ar rcs $(NAME_LIB) $(OBJ)
 
-# Rule to clean object files
-clean:
-	rm -f $(ASM_OBJS) $(C_OBJS)
+test : $(NAME)
+	gcc $(CFLAGS) -L. -lasm -o test main.c $(NAME_LIB)
+	
+clean :
+	rm -f $(OBJ)
 
-# Rule to clean everything
-fclean: clean
-	rm -f $(NAME) my_program
+fclean : clean
+	rm -f $(NAME_LIB)
+	rm -f ./a.out
 
-# Rule to rebuild everything
-re: fclean all
-
-# Rule to build everything
-all: $(NAME) my_program
-
-# Rule to add bonuses
-bonus:
-	@echo "Add bonus compilation rules here if necessary"
-
-.PHONY: all clean fclean re bonus
+re : fclean all
