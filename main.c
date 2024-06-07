@@ -4,16 +4,19 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <errno.h>
 
 
 
 // Helper function to print test results
 void print_result(const char *test, const char *expected, const char *result) {
     if (strcmp(expected, result) == 0) {
-        printf("[PASS] %s\n", test);
+        printf("\033[0;32m[PASS]\033[0m %s\n", test);
+		printf("Expected: \'%s\'\n", expected);
+        printf("Got     : \'%s\'\n", result);
     } else {
-        printf("[FAIL] %s\n", test);
-        printf("Expected: %s\n", expected);
+        printf("\033[0;31m[FAIL]\033[0m \'%s\'\n", test);
+        printf("Expected: \'%s\'\n", expected);
         printf("Got: %s\n", result);
     }
 }
@@ -26,19 +29,29 @@ void test_strlen() {
     printf("[TEST] strlen\n");
     printf("Expected length: %zu\n", expected_len);
     printf("Result length: %zu\n", result_len);
-    printf((expected_len == result_len) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_len == result_len) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
 }
 
 void test_strcpy() {
     const char *src = "Hello, World!";
+	const char *empty = "";
+
+
     char dest[50];
     char ft_dest[50];
+    char dest2[50];
+    char ft_dest2[50];
     
     strcpy(dest, src);
     ft_strcpy(ft_dest, src);
 
+    strcpy(dest2, empty);
+    ft_strcpy(ft_dest2, empty);
+
+
     printf("[TEST] strcpy\n");
     print_result("strcpy", dest, ft_dest);
+    print_result("strcpy", dest2, ft_dest2);
     printf("\n");
 }
 
@@ -56,21 +69,26 @@ void test_strcmp() {
     printf("[TEST] strcmp\n");
     printf("Expected strcmp(str1, str2): %d\n", expected_cmp1);
     printf("Result strcmp(str1, str2): %d\n", result_cmp1);
-    printf((expected_cmp1 == result_cmp1) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_cmp1 == result_cmp1) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
     
     printf("Expected strcmp(str1, str3): %d\n", expected_cmp2);
     printf("Result strcmp(str1, str3): %d\n", result_cmp2);
-    printf((expected_cmp2 == result_cmp2) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_cmp2 == result_cmp2) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
 }
 
 void test_strdup() {
-    const char *src = "Hello, World!";
+    const char *src = "";
+    const char *src2 = "Hello world";
     
     char *expected_dup = strdup(src);
     char *result_dup = ft_strdup(src);
+
+    char *expected_dup2 = strdup(src2);
+    char *result_dup2 = ft_strdup(src2);
     
     printf("[TEST] strdup\n");
     print_result("strdup", expected_dup, result_dup);
+    print_result("strdup", expected_dup2, result_dup2);
 	printf("addr of original strdup : %p\n", expected_dup);
 	printf("addr of ft_strdup       : %p\n", result_dup);
     
@@ -88,15 +106,18 @@ void test_write() {
     printf("[TEST] write\n");
     printf("Expected write result: %zd\n", expected_res);
     printf("Result write result: %zd\n", result_res);
-    printf((expected_res == result_res) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_res == result_res) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
 
 	expected_res = write(STDOUT_FILENO, NULL, strlen(test_str));
+	printf("errno : %i\n", errno);
+	errno = 0;
     result_res = ft_write(STDOUT_FILENO, NULL, strlen(test_str));
+	printf("errno : %i\n", errno);
     
     printf("[TEST] write\n");
     printf("Expected write result: %zd\n", expected_res);
     printf("Result write result: %zd\n", result_res);
-    printf((expected_res == result_res) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_res == result_res) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
 }
 
 void test_read() {
@@ -120,7 +141,7 @@ void test_read() {
     printf("[TEST] read\n");
     printf("Expected read result: %zd\n", expected_res);
     printf("Result read result: %zd\n", result_res);
-    printf((expected_res == result_res && strcmp(expected_buf, result_buf) == 0) ? "[PASS]\n\n" : "[FAIL]\n\n");
+    printf((expected_res == result_res && strcmp(expected_buf, result_buf) == 0) ? "\033[0;32m[PASS]\033[0m\n\n" : "\033[0;31m[FAIL]\033[0m\n\n");
 }
 
 int main() {

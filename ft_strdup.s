@@ -7,7 +7,7 @@ extern ft_strcpy
 ft_strdup: 
 	; rdi pointeur sur src 
 	mov rbx, rdi ; sve the string 
-	mov rdi, rbx ; move the string to rdi to call strlen
+	push rbx
 	call ft_strlen
 
 	inc rax ; le null term
@@ -17,6 +17,7 @@ ft_strdup:
 	jz .fail ; if malloc failed ret 0
 	
 	mov rdi, rax ; prep the args to call strcpy
+	pop rbx
 	mov rsi, rbx
 	call ft_strcpy
 	jmp .done

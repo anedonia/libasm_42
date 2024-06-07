@@ -1,3 +1,4 @@
+extern __errno_location
 section .text 
 
 global ft_write
@@ -12,5 +13,9 @@ ft_write:
 	ret
 
 .error_exit:
+	neg rax
+	mov rdi, rax
+	call __errno_location
+	mov [rax], rdi
 	mov rax, -1
-	ret
+    ret
