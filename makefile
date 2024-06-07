@@ -11,7 +11,7 @@ SRCS = 	ft_write.s \
 
 CC = gcc 
 
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -no-pie 
 
 NASM = nasm
 
@@ -29,6 +29,7 @@ $(NAME) : $(OBJ)
 
 test : $(NAME)
 	gcc $(CFLAGS) -L. -lasm -o test main.c $(NAME_LIB)
+	./test
 	
 clean :
 	rm -f $(OBJ)
@@ -36,5 +37,6 @@ clean :
 fclean : clean
 	rm -f $(NAME_LIB)
 	rm -f ./a.out
+	rm -f test
 
 re : fclean all

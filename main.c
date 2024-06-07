@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 
 
@@ -78,10 +79,56 @@ void test_strdup() {
     printf("\n");
 }
 
+
+void test_write() {
+    const char *test_str = "Hello, ft_write!\n";
+    ssize_t expected_res = write(STDOUT_FILENO, test_str, strlen(test_str));
+    ssize_t result_res = ft_write(STDOUT_FILENO, test_str, strlen(test_str));
+    
+    printf("[TEST] write\n");
+    printf("Expected write result: %zd\n", expected_res);
+    printf("Result write result: %zd\n", result_res);
+    printf((expected_res == result_res) ? "[PASS]\n\n" : "[FAIL]\n\n");
+
+	expected_res = write(STDOUT_FILENO, NULL, strlen(test_str));
+    result_res = ft_write(STDOUT_FILENO, NULL, strlen(test_str));
+    
+    printf("[TEST] write\n");
+    printf("Expected write result: %zd\n", expected_res);
+    printf("Result write result: %zd\n", result_res);
+    printf((expected_res == result_res) ? "[PASS]\n\n" : "[FAIL]\n\n");
+}
+
+void test_read() {
+    char expected_buf[100];
+    char result_buf[100];
+    int fd = open("testfile.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening file");
+        return;
+    }
+    
+    ssize_t expected_res = read(fd, expected_buf, 99);
+    expected_buf[expected_res] = '\0';
+    
+    lseek(fd, 0, SEEK_SET);  // Reset file descriptor to beginning for second read
+    ssize_t result_res = ft_read(fd, result_buf, 99);
+    result_buf[result_res] = '\0';
+    
+    close(fd);
+    
+    printf("[TEST] read\n");
+    printf("Expected read result: %zd\n", expected_res);
+    printf("Result read result: %zd\n", result_res);
+    printf((expected_res == result_res && strcmp(expected_buf, result_buf) == 0) ? "[PASS]\n\n" : "[FAIL]\n\n");
+}
+
 int main() {
     test_strlen();	// good
     test_strcpy();	// fucked
     test_strcmp();	// fucked
     test_strdup();	// ultra fucked 
+	test_write();
+	test_read();
     return 0;
 }
