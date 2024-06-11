@@ -39,6 +39,7 @@ void test_strcpy() {
 
     char dest[50];
     char ft_dest[50];
+    
     char dest2[50];
     char ft_dest2[50];
     

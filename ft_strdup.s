@@ -12,7 +12,7 @@ ft_strdup:
 
 	inc rax ; le null term
 	mov rdi, rax ; put the size to malloc in rdi 
-	call malloc
+	call malloc  wrt ..plt
 	test rax, rax
 	jz .fail ; if malloc failed ret 0
 	

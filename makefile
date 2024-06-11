@@ -11,7 +11,7 @@ SRCS = 	ft_write.s \
 
 CC = gcc 
 
-CFLAGS = -Wall -Wextra -Werror -no-pie 
+CFLAGS = -Wall -Wextra -Werror 
 
 NASM = nasm
 

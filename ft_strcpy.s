@@ -4,9 +4,6 @@ global ft_strcpy
 ft_strcpy: 
 	xor rax, rax
 	xor rbx, rbx
-	
-	cmp byte [rsi], 0
-	je .done
 	jmp .loop
 
 .loop: 
